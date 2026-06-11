@@ -1,0 +1,2890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EagleEyes — Autonomous AML & Compliance Console</title>
+    <!-- Modern Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0A1628;      /* Deep navy background */
+            --bg-secondary: #112240;    /* Sleek slate navy card background */
+            --bg-tertiary: #1b2f54;     /* Lighter navy for hover states */
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(0, 122, 61, 0.25);
+            
+            /* Text Colors */
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            
+            /* Action & Risk Colors */
+            --color-high: #E63946;      /* High Risk Red */
+            --color-medium: #F4A261;    /* Medium Risk Amber */
+            --color-low: #457B9D;       /* Low Risk Blue */
+            --color-cleared: #007A3D;   /* Kuwait Flag Green */
+            --color-neutral: #6c757d;   /* Grey for Cleared/Disabled */
+            
+            /* Accents */
+            --accent-green: #007A3D;
+            --accent-glow: rgba(0, 122, 61, 0.2);
+            --shadow-premium: 0 10px 30px -10px rgba(2, 12, 27, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px -2px rgba(0,0,0,0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-text {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-badge {
+            background: rgba(0, 122, 61, 0.15);
+            border: 1px solid rgba(0, 122, 61, 0.3);
+            color: #4ade80;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.4rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            border-bottom: 2px solid var(--accent-green);
+            border-radius: 6px 6px 0 0;
+            background: rgba(0, 122, 61, 0.05);
+        }
+
+        .nav-item.admin-btn {
+            font-size: 1.1rem;
+            padding: 0.5rem;
+        }
+
+        /* Stats Bar Deck */
+        .stats-bar {
+            background: rgba(17, 34, 64, 0.5);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            border-left: 2px solid var(--border-color);
+            padding-left: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.02);
+        }
+
+        .stat-card.alert-active {
+            border-left-color: var(--color-high);
+        }
+
+        .stat-card.accent-active {
+            border-left-color: var(--accent-green);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .stat-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .stat-badge.pulse-red {
+            background: rgba(230, 57, 70, 0.15);
+            border: 1px solid var(--color-high);
+            color: var(--color-high);
+            animation: pulse-border 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.4); }
+            50% { box-shadow: 0 0 8px 2px rgba(230, 57, 70, 0.2); }
+        }
+
+        /* Main Workspace Split Layout */
+        main {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            display: flex;
+            gap: 1.5rem;
+            max-width: 1700px;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .view-panel {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Hidden Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Alert Queue (Left) */
+        .queue-panel {
+            width: 400px;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .panel-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .panel-title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Filters */
+        .filter-tabs {
+            display: flex;
+            background: rgba(10, 22, 40, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.15rem;
+            gap: 0.15rem;
+        }
+
+        .filter-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.4rem 0.25rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .filter-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .filter-tab.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Alert Cards Queue Scrollable area */
+        .queue-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .alert-card {
+            background: rgba(10, 22, 40, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: transparent;
+        }
+
+        .alert-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.15);
+            background: var(--bg-tertiary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+
+        .alert-card.selected {
+            background: rgba(0, 122, 61, 0.05);
+            border-color: var(--accent-green);
+        }
+
+        .alert-card.selected::before {
+            background: var(--accent-green);
+        }
+
+        /* Risk level colors specifically for cards */
+        .alert-card.risk-HIGH::before { background: var(--color-high); }
+        .alert-card.risk-MEDIUM::before { background: var(--color-medium); }
+        .alert-card.risk-LOW::before { background: var(--color-low); }
+        .alert-card.status-REVIEWED_CLEARED::before { background: var(--accent-green); }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-ref {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-high { background: var(--color-high); color: #fff; }
+        .badge-medium { background: var(--color-medium); color: #0A1628; }
+        .badge-low { background: var(--color-low); color: #fff; }
+        .badge-cleared { background: var(--color-cleared); color: #fff; }
+
+        .card-sender {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-amount-line {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255,255,255,0.03);
+            padding-top: 0.5rem;
+        }
+
+        .card-time {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .card-rules {
+            background: rgba(255,255,255,0.05);
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        /* Detail Panel (Right) */
+        .detail-panel {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .detail-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Detail Empty State */
+        .detail-empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            gap: 1rem;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            opacity: 0.25;
+            animation: pulse-scale 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.08); opacity: 0.35; }
+        }
+
+        /* Detail Header Block */
+        .detail-header-block {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .detail-meta-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .detail-ref-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .detail-ref-no {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .detail-date-branch {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .detail-sender-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            margin-top: 0.25rem;
+        }
+
+        .detail-badge-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.35rem;
+        }
+
+        .detail-trace-link {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+            margin-top: 0.25rem;
+        }
+
+        .detail-trace-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Risk Score Meter */
+        .risk-score-container {
+            background: rgba(10, 22, 40, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .risk-bar-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .risk-title {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .risk-num-display {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .risk-progress-outer {
+            height: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 999px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .risk-progress-inner {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            transition: width 0.8s cubic-bezier(0.1, 0.8, 0.25, 1);
+        }
+
+        /* Formula Row */
+        .formula-row {
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.02);
+            padding: 0.5rem;
+            border-radius: 4px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        /* Customer KYC grid */
+        .kyc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .kyc-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .kyc-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .kyc-val {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .kyc-val.pep-flag {
+            color: var(--color-high);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Suspicious Rules Card Block */
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rules-triggered-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .rule-card {
+            background: rgba(10, 22, 40, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .rule-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rule-card-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .rule-weight-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .rule-desc {
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .rule-factors {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            list-style: none;
+            padding-left: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .rule-factors li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.35rem;
+        }
+
+        .rule-factors li::before {
+            content: '•';
+            color: var(--color-medium);
+            font-weight: bold;
+        }
+
+        .rule-reg-reference {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.02);
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            border-left: 2px solid var(--color-medium);
+            margin-top: 0.25rem;
+        }
+
+        /* Gemini Reasoning Block */
+        .gemini-reasoning-box {
+            background: rgba(0, 122, 61, 0.02);
+            border: 1px dashed rgba(0, 122, 61, 0.3);
+            border-left: 4px solid var(--accent-green);
+            border-radius: 0 8px 8px 0;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .gemini-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gemini-title-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .gemini-narrative {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        .gemini-meta-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed rgba(255,255,255,0.05);
+            padding-top: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .gemini-confidence {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .gemini-rec-action {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-weight: 600;
+        }
+
+        .gemini-rec-badge {
+            background: rgba(244, 162, 97, 0.15);
+            border: 1px solid var(--color-medium);
+            color: var(--color-medium);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .gemini-rec-badge.file-str {
+            background: rgba(230, 57, 70, 0.15);
+            border-color: var(--color-high);
+            color: var(--color-high);
+        }
+
+        /* Detail Actions Footer */
+        .detail-actions-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 22, 40, 0.3);
+        }
+
+        .action-buttons-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            border: 1px solid transparent;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-clear { background: var(--bg-tertiary); border-color: var(--border-color); color: var(--text-primary); }
+        .btn-clear:hover { background: rgba(255,255,255,0.08); }
+        
+        .btn-monitor { background: rgba(69, 123, 157, 0.15); border-color: var(--color-low); color: #8ecae6; }
+        .btn-monitor:hover { background: rgba(69, 123, 157, 0.25); }
+
+        .btn-hold { background: rgba(244, 162, 97, 0.15); border-color: var(--color-medium); color: var(--color-medium); }
+        .btn-hold:hover { background: rgba(244, 162, 97, 0.25); }
+
+        .btn-filestr { background: rgba(230, 57, 70, 0.15); border-color: var(--color-high); color: var(--color-high); }
+        .btn-filestr:hover { background: rgba(230, 57, 70, 0.25); box-shadow: 0 0 10px rgba(230, 57, 70, 0.2); }
+
+        .btn-viewstr {
+            background: transparent;
+            border: 1px solid #60a5fa;
+            color: #60a5fa;
+        }
+        .btn-viewstr:hover {
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        /* Self Improvement Panel Layout */
+        .improvement-panel {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .improvement-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .improvement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .improvement-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .improvement-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .improvement-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Grid for KPI in Self-Improvement */
+        .imp-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+
+        .imp-kpi-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .imp-kpi-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .imp-kpi-val {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        /* Gating Warnings Card */
+        .gating-warning-card {
+            background: rgba(244, 162, 97, 0.05);
+            border: 1px solid rgba(244, 162, 97, 0.3);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .gating-warning-icon {
+            font-size: 1.25rem;
+            color: var(--color-medium);
+        }
+
+        .gating-warning-text-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .gating-warning-title {
+            font-weight: 700;
+            color: var(--color-medium);
+        }
+
+        .gating-warning-desc {
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+        }
+
+        /* Split columns for analysis & weights */
+        .imp-split-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+        }
+
+        .imp-left-col, .imp-right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .imp-card {
+            background: rgba(10, 22, 40, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .imp-narrative-content {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        /* Weight tables */
+        .weight-table-container {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .weight-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        .weight-table th, .weight-table td {
+            padding: 0.65rem 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .weight-table th {
+            background: rgba(255,255,255,0.03);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        .weight-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .weight-table td.rule-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .weight-change-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-weight: 700;
+        }
+
+        .change-up { color: #4ade80; }
+        .change-down { color: var(--color-high); }
+        .change-none { color: var(--text-secondary); }
+
+        /* Keyword capsules */
+        .keyword-pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .keyword-pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .keyword-pill.addition {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            color: #4ade80;
+        }
+
+        .keyword-pill.removal {
+            background: rgba(230, 57, 70, 0.1);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+            color: var(--color-high);
+        }
+
+        /* Gated bottom bar for self improvement */
+        .imp-footer-actions {
+            border-top: 1px solid var(--border-color);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+            background: rgba(10, 22, 40, 0.3);
+        }
+
+        .btn-apply-imp {
+            background: var(--accent-green);
+            border-color: rgba(0, 122, 61, 0.5);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            font-size: 0.85rem;
+            box-shadow: 0 0 15px rgba(0, 122, 61, 0.3);
+        }
+
+        .btn-apply-imp:hover:not(:disabled) {
+            background: #00994d;
+            box-shadow: 0 0 20px rgba(0, 122, 61, 0.5);
+        }
+
+        .btn-apply-imp:disabled {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Demo Controls (Bottom persistent bar) */
+        .demo-bar {
+            background: rgba(10, 22, 40, 0.9);
+            border-top: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .demo-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-btn-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-demo {
+            font-size: 0.75rem;
+            padding: 0.45rem 1rem;
+            border-radius: 4px;
+            text-transform: none;
+            font-weight: 600;
+        }
+
+        .btn-load-data {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-load-data:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-run-batch {
+            background: rgba(244, 162, 97, 0.1);
+            border: 1px solid var(--color-medium);
+            color: var(--color-medium);
+        }
+
+        .btn-run-batch:hover {
+            background: rgba(244, 162, 97, 0.2);
+        }
+
+        .btn-stop {
+            background: rgba(239, 71, 111, 0.15);
+            border: 1px solid #ef476f;
+            color: #ef476f;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-stop:hover {
+            background: rgba(239, 71, 111, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(239, 71, 111, 0.2);
+        }
+
+        .btn-stop:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Scrolling Log Progress Drawer */
+        .progress-drawer {
+            position: fixed;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            background: rgba(17, 34, 64, 0.95);
+            border-top: 1px solid var(--color-medium);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(15px);
+            z-index: 99;
+            transform: translateY(calc(100% + 50px));
+            transition: transform 0.4s cubic-bezier(0.1, 0.8, 0.25, 1);
+            padding: 1.25rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .progress-drawer.open {
+            transform: translateY(0);
+        }
+
+        .drawer-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-medium);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-stat-line {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 99px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-medium), var(--accent-green));
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.1s linear;
+        }
+
+        .progress-logs-console {
+            background: rgba(10, 22, 40, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            height: 120px;
+            overflow-y: auto;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            scroll-behavior: smooth;
+        }
+
+        .console-line {
+            line-height: 1.4;
+        }
+
+        .console-line.info { color: var(--text-secondary); }
+        .console-line.success { color: #4ade80; }
+        .console-line.warning { color: var(--color-medium); }
+        .console-line.error { color: var(--color-high); }
+
+        /* Dialogs and Modals (Review & STR) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(2, 12, 27, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 550px;
+            max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            background: rgba(10, 22, 40, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            padding: 0.6rem 0.8rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .textarea-input {
+            height: 120px;
+            resize: none;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            background: rgba(10, 22, 40, 0.2);
+        }
+
+        /* Large Monospace Box for STR Report Modal */
+        .str-report-view {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(10, 22, 40, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            white-space: pre-wrap;
+            height: 400px;
+            overflow-y: auto;
+            color: #d1d5db;
+        }
+
+        .modal-box-large {
+            width: 800px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 999;
+        }
+
+        .toast {
+            min-width: 300px;
+            max-width: 450px;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border-left: 4px solid transparent;
+            color: var(--text-primary);
+            transform: translateX(120%);
+            animation: slide-in 0.3s forwards cubic-bezier(0.1, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        @keyframes slide-in {
+            to { transform: translateX(0); }
+        }
+
+        .toast.success { background: #1b2f27; border-left-color: var(--accent-green); }
+        .toast.error { background: #321e23; border-left-color: var(--color-high); }
+        .toast.info { background: #162a3c; border-left-color: #60a5fa; }
+
+        .toast-body {
+            font-size: 0.825rem;
+            font-weight: 500;
+        }
+
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Micro Scrollbar style */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 99px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Spinner for demo loading button */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .demo-spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        #btn-load-demo {
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+        #btn-load-demo:hover {
+            background-color: #00994C !important;
+        }
+        #btn-load-demo:disabled {
+            background-color: #00401e !important;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Sticky Header -->
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">🦅</div>
+            <div class="logo-text">EagleEyes</div>
+            <span class="logo-badge">Compliance Center</span>
+        </div>
+        <div class="nav-links">
+            <a class="nav-item active" id="nav-dashboard-btn" onclick="UI.switchTab('dashboard')">
+                <span>🔔</span> Dashboard / Alerts
+            </a>
+            <a class="nav-item" id="nav-improvement-btn" onclick="UI.switchTab('improvement')">
+                <span>📈</span> MLOps self-improvement
+            </a>
+            <a class="nav-item admin-btn" title="System Settings">⚙️</a>
+        </div>
+    </header>
+
+    <!-- Operational KPI Stats Bar (Always Visible) -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <span class="stat-label">Total Evaluated</span>
+            <div class="stat-value-container">
+                <span class="stat-value" id="stats-total-evaluated">0</span>
+            </div>
+        </div>
+        <div class="stat-card alert-active">
+            <span class="stat-label">Pending Alerts</span>
+            <div class="stat-value-container">
+                <span class="stat-value" id="stats-pending-alerts">0</span>
+                <span class="stat-badge pulse-red hidden" id="stats-pending-badge">Critical</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">High Risk Alerts</span>
+            <div class="stat-value-container">
+                <span class="stat-value" id="stats-high-risk">0</span>
+            </div>
+        </div>
+        <div class="stat-card accent-active">
+            <span class="stat-label">STRs Filed (CBK FIU)</span>
+            <div class="stat-value-container">
+                <span class="stat-value" id="stats-strs-filed">0</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">False Positive Rate</span>
+            <div class="stat-value-container">
+                <span class="stat-value" id="stats-false-positive">0.0%</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Self-Improvement Run</span>
+            <div class="stat-value-container">
+                <span class="stat-value" style="font-size: 0.95rem; font-weight: 600;" id="stats-last-run">Never Run</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <main>
+
+        <!-- View 1: Compliance Review (Split View) -->
+        <div class="view-panel" id="view-dashboard">
+            <!-- Left Side Alert Queue -->
+            <div class="queue-panel">
+                <div class="panel-header">
+                    <div class="panel-title-bar">
+                        <h3 class="panel-title">⚠️ Flagged Alert Queue</h3>
+                        <button class="btn btn-apply-imp" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-color: rgba(255,255,255,0.15);" onclick="UI.exportToExcel()">
+                            📥 Export to Excel
+                        </button>
+                    </div>
+                    <!-- Filters Grid -->
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="UI.changeFilter('ALL')">ALL</button>
+                        <button class="filter-tab" onclick="UI.changeFilter('HIGH')">HIGH</button>
+                        <button class="filter-tab" onclick="UI.changeFilter('MEDIUM')">MED</button>
+                        <button class="filter-tab" onclick="UI.changeFilter('LOW')">LOW</button>
+                        <button class="filter-tab" onclick="UI.changeFilter('CLEARED')">CLEARED</button>
+                    </div>
+                </div>
+                <!-- Scroll Area for cards -->
+                <div class="queue-scroll" id="alert-queue-list">
+                    <!-- Cards populated here -->
+                </div>
+            </div>
+
+            <!-- Right Side Alert Detail Panel -->
+            <div class="detail-panel">
+                <div class="detail-scroll" id="alert-detail-view">
+                    <!-- Select Alert Empty State default -->
+                    <div class="detail-empty-state">
+                        <div class="empty-icon">👁️</div>
+                        <h3>EagleEyes AML Standby Console</h3>
+                        <p style="max-width: 450px; font-size: 0.85rem; line-height: 1.6;">
+                            Please select a flagged transaction from the left panel to review rules triggered, inspect Gemini reasoning, explore historical remittance context, and submit formal regulatory dispositions.
+                        </p>
+                    </div>
+                </div>
+                <div class="detail-actions-footer hidden" id="alert-detail-footer">
+                    <!-- Actions dynamically injected -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View 2: Self-Improvement Panel (Full Screen Panel) -->
+        <div class="view-panel hidden" id="view-improvement">
+            <div class="improvement-panel">
+                <div class="improvement-scroll">
+                    <div class="improvement-header">
+                        <div class="improvement-title-group">
+                            <h2 class="improvement-title">🤖 MLOps Neural Weight Calibration</h2>
+                            <p class="improvement-subtitle">Every 50 evaluations, Gemini analyzes Arize Phoenix trace logs and human feedback patterns to recommend fine-tuned compliance heuristics.</p>
+                        </div>
+                        <span class="logo-badge" style="background: rgba(244, 162, 97, 0.1); border-color: var(--color-medium); color: var(--color-medium);" id="improvement-applied-badge">Pending Review</span>
+                    </div>
+
+                    <!-- Gating Warnings Card -->
+                    <div class="gating-warning-card hidden" id="imp-gating-card">
+                        <div class="gating-warning-icon">⚠️</div>
+                        <div class="gating-warning-text-box">
+                            <span class="gating-warning-title">Review Warning Gated</span>
+                            <span class="gating-warning-desc" id="imp-gating-desc">This report contains a low confidence classification or operational error flags. The 'Apply' action has been disabled to prevent compliance instability.</span>
+                        </div>
+                    </div>
+
+                    <!-- Top row metrics -->
+                    <div class="imp-kpi-grid">
+                        <div class="imp-kpi-card">
+                            <span class="imp-kpi-label">Batch Evaluated</span>
+                            <span class="imp-kpi-val" id="imp-total-evaluated">—</span>
+                        </div>
+                        <div class="imp-kpi-card">
+                            <span class="imp-kpi-label">Alerts Flagged</span>
+                            <span class="imp-kpi-val" id="imp-total-alerts">—</span>
+                        </div>
+                        <div class="imp-kpi-card">
+                            <span class="imp-kpi-label">False Positive Est.</span>
+                            <span class="imp-kpi-val" style="color: var(--color-medium);" id="imp-false-positive">—</span>
+                        </div>
+                        <div class="imp-kpi-card">
+                            <span class="imp-kpi-label">Confidence Assessment</span>
+                            <span class="imp-kpi-val" style="color: #4ade80;" id="imp-confidence">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Split Row for Narrative and Table -->
+                    <div class="imp-split-row">
+                        <div class="imp-left-col">
+                            <div class="imp-card">
+                                <h4 class="section-title">📊 Weight Tuning Comparison</h4>
+                                <div class="weight-table-container">
+                                    <table class="weight-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Rule ID</th>
+                                                <th>Current Weight</th>
+                                                <th>Proposed Weight</th>
+                                                <th>Delta</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="imp-weights-table-body">
+                                            <!-- Dynamically generated rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="imp-right-col">
+                            <div class="imp-card">
+                                <h4 class="section-title">✍️ Gemini Meta-Analysis Narrative</h4>
+                                <div class="imp-narrative-content" id="imp-gemini-narrative">
+                                    No self-improvement runs executed yet. Run a demo batch of at least 50 evaluations to trigger meta-analysis.
+                                </div>
+                            </div>
+
+                            <div class="imp-card">
+                                <h4 class="section-title">🔑 Suspicious Keyword Delta</h4>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <span class="kyc-label" style="font-size: 0.65rem;">New Keywords Suggested (Additions)</span>
+                                    <div class="keyword-pills-container" id="imp-keyword-additions">
+                                        <!-- Additions -->
+                                    </div>
+                                    <span class="kyc-label" style="font-size: 0.65rem; margin-top: 0.25rem;">False Positive Triggers Suppressed (Removals)</span>
+                                    <div class="keyword-pills-container" id="imp-keyword-removals">
+                                        <!-- Removals -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="imp-footer-actions">
+                    <button class="btn btn-apply-imp" id="improvement-apply-btn" onclick="UI.openApplyImprovementModal()">Approve & Deploy Weights</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Persistent Dev Demo Controls Bottom Bar -->
+    <div class="demo-bar">
+        <div class="demo-label">
+            <span>⚙️ Hackathon Demo Controller</span>
+            <span style="font-size: 0.65rem; background: rgba(244, 162, 97, 0.15); border: 1px solid var(--color-medium); padding: 0.1rem 0.35rem; border-radius: 3px; margin-left: 0.5rem;">Dev Sandbox Mode</span>
+        </div>
+        <div class="demo-btn-group">
+            <button class="btn btn-demo btn-load-data" id="btn-demo-seed" onclick="UI.triggerDemoSeed()">
+                🔄 Load Synthetic Dataset
+            </button>
+            <button
+                id="btn-load-demo"
+                onclick="loadDemoData()"
+                style="background: #007A3D; color: white; border: none; padding: 8px 16px;
+                       border-radius: 4px; cursor: pointer; font-size: 13px; margin-left: 8px;">
+                Load Demo Data
+            </button>
+            <button class="btn btn-demo btn-run-batch" id="btn-demo-batch" onclick="UI.triggerBatchDemo()">
+                ⚡ Run Batch Evaluation
+            </button>
+        </div>
+    </div>
+
+    <!-- Scrolling Log progress drawer -->
+    <div class="progress-drawer" id="batch-progress-drawer">
+        <div class="drawer-top-row">
+            <div class="drawer-title">
+                <span>🔄</span> <span id="drawer-title-text">Sequential Compliance Stream Ingesting...</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="progress-stat-line" id="progress-text">
+                    Evaluated: 0 / 600 (0.00%)
+                </div>
+                <button class="btn-stop" id="btn-stop-batch" onclick="UI.stopBatchEvaluation()" style="display: none;">
+                    🛑 Stop Evaluation
+                </button>
+            </div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <div class="progress-logs-console" id="progress-console">
+            <!-- Stream logs here -->
+        </div>
+    </div>
+
+    <!-- Action Confirmation Modal Overlay -->
+    <div class="modal-overlay" id="review-action-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-review-title">Submit Compliance Decision</h3>
+                <button class="modal-close-btn" onclick="UI.closeModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Reviewer Credentials</label>
+                    <input type="text" class="form-input" id="reviewer-name-input" value="Senior Compliance Officer" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Compliance Dispositive Notes</label>
+                    <textarea class="form-input textarea-input" id="reviewer-notes-input" placeholder="Document regulatory grounds, salary ratios, or relationships justification..."></textarea>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-secondary);" id="review-tipping-warning">
+                    ⚠️ <strong>Anti-Tipping Off Warning</strong>: Pursuant to CBK AML Law No. 106/2013 Article 22, it is strictly illegal to disclose to the customer or any third party that a transaction review has been logged or escalated.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-clear" style="padding: 0.5rem 1rem;" onclick="UI.closeModals()">Cancel</button>
+                <button class="btn btn-apply-imp" style="padding: 0.5rem 1rem;" id="modal-review-confirm-btn">Confirm Decision</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suspicious Transaction Report plain text Modal Overlay -->
+    <div class="modal-overlay" id="str-report-modal">
+        <div class="modal-box modal-box-large">
+            <div class="modal-header">
+                <h3 class="modal-title">📄 Suspicious Transaction Report (CBK FIU File)</h3>
+                <button class="modal-close-btn" onclick="UI.closeModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="str-report-view" id="str-report-body">
+                    Loading suspicious transaction report from database...
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-clear" style="padding: 0.5rem 1rem;" id="btn-copy-str">Copy to Clipboard</button>
+                <button class="btn btn-apply-imp" style="padding: 0.5rem 1rem; background: var(--bg-tertiary); border-color: var(--border-color); color: var(--text-primary);" onclick="UI.closeModals()">Close View</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Core Business Javascript Logic in Module Pattern -->
+    <script>
+        const API = {
+            base: '/api/v1',
+            async get(path) {
+                try {
+                    const res = await fetch(`${this.base}${path}`);
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.detail?.detail || err.detail || `HTTP ${res.status}`);
+                    }
+                    return await res.json();
+                } catch (e) {
+                    UI.showToast(`Fetch error: ${e.message}`, 'error');
+                    throw e;
+                }
+            },
+            async post(path, body) {
+                try {
+                    const res = await fetch(`${this.base}${path}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.detail?.detail || err.detail || `HTTP ${res.status}`);
+                    }
+                    return await res.json();
+                } catch (e) {
+                    UI.showToast(`Submission error: ${e.message}`, 'error');
+                    throw e;
+                }
+            },
+            async patch(path, body) {
+                try {
+                    const res = await fetch(`${this.base}${path}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.detail?.detail || err.detail || `HTTP ${res.status}`);
+                    }
+                    return await res.json();
+                } catch (e) {
+                    UI.showToast(`Decision logging error: ${e.message}`, 'error');
+                    throw e;
+                }
+            }
+        };
+
+        const State = {
+            selectedAlertId: null,
+            alerts: [],
+            stats: {},
+            latestReport: null,
+            activeTab: 'dashboard', 
+            currentFilter: 'ALL',   
+            batchRunning: false,
+            pollerId: null,
+            batchPollerId: null,
+            abortController: null
+        };
+
+        const UI = {
+            init() {
+                // Setup Navigation
+                UI.switchTab('dashboard');
+                
+                // Trigger initial fetch
+                UI.loadStats();
+                UI.loadAlertQueue();
+                
+                // Periodic Polling
+                State.pollerId = setInterval(() => {
+                    if (!State.batchRunning) {
+                        UI.loadStats();
+                        UI.loadAlertQueue(true); // silent background load
+                    }
+                }, 30000);
+
+                // Setup STR clipboard copy
+                document.getElementById('btn-copy-str').addEventListener('click', () => {
+                    const text = document.getElementById('str-report-body').innerText;
+                    navigator.clipboard.writeText(text)
+                        .then(() => UI.showToast("STR Copied to Clipboard successfully!", "success"))
+                        .catch(() => UI.showToast("Failed to copy clipboard", "error"));
+                });
+            },
+
+            showToast(message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                const body = document.createElement('div');
+                body.className = 'toast-body';
+                body.innerText = message;
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'toast-close';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.onclick = () => toast.remove();
+                
+                toast.appendChild(body);
+                toast.appendChild(closeBtn);
+                container.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.animation = 'slide-in 0.3s reverse forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            },
+
+            switchTab(tabName) {
+                State.activeTab = tabName;
+                
+                const dashView = document.getElementById('view-dashboard');
+                const impView = document.getElementById('view-improvement');
+                const dashBtn = document.getElementById('nav-dashboard-btn');
+                const impBtn = document.getElementById('nav-improvement-btn');
+                
+                if (tabName === 'dashboard') {
+                    dashView.classList.remove('hidden');
+                    impView.classList.add('hidden');
+                    dashBtn.classList.add('active');
+                    impBtn.classList.remove('active');
+                    UI.loadAlertQueue();
+                } else {
+                    dashView.classList.add('hidden');
+                    impView.classList.remove('hidden');
+                    dashBtn.classList.remove('active');
+                    impBtn.classList.add('active');
+                    UI.loadLatestSelfImprovementReport();
+                }
+            },
+
+            changeFilter(filterName) {
+                State.currentFilter = filterName;
+                const tabs = document.querySelectorAll('.filter-tab');
+                tabs.forEach(tab => {
+                    if (tab.innerText === filterName || (filterName === 'MEDIUM' && tab.innerText === 'MED')) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+                UI.loadAlertQueue();
+            },
+
+            async loadStats() {
+                try {
+                    const stats = await API.get('/stats');
+                    State.stats = stats;
+                    UI.renderStatsBar(stats);
+                } catch (e) {
+                    console.error("Failed to load aggregate metrics", e);
+                }
+            },
+
+            renderStatsBar(stats) {
+                document.getElementById('stats-total-evaluated').innerText = stats.total_transactions_evaluated.toLocaleString();
+                document.getElementById('stats-pending-alerts').innerText = stats.pending_alerts.toLocaleString();
+                document.getElementById('stats-high-risk').innerText = stats.high_risk_alerts.toLocaleString();
+                document.getElementById('stats-strs-filed').innerText = stats.strs_filed.toLocaleString();
+                document.getElementById('stats-false-positive').innerText = `${(stats.false_positive_rate_30d * 100.0).toFixed(1)}%`;
+                
+                const lastRunText = stats.last_improvement_run 
+                    ? UI.formatTimeDifference(stats.last_improvement_run)
+                    : "Never Run";
+                document.getElementById('stats-last-run').innerText = lastRunText;
+
+                const badge = document.getElementById('stats-pending-badge');
+                if (stats.pending_alerts > 0) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            },
+
+            async loadAlertQueue(silent = false) {
+                let status = "PENDING";
+                let riskLevel = null;
+                
+                if (State.currentFilter === 'CLEARED') {
+                    status = "REVIEWED_CLEARED";
+                } else if (State.currentFilter !== 'ALL') {
+                    riskLevel = State.currentFilter;
+                }
+                
+                let query = `/alerts?status=${status}`;
+                if (riskLevel) {
+                    query += `&risk_level=${riskLevel}`;
+                }
+                query += `&limit=50`;
+                
+                try {
+                    const alerts = await API.get(query);
+                    State.alerts = alerts;
+                    UI.renderAlertQueue(alerts, silent);
+                } catch (e) {
+                    console.error("Failed to fetch alert list", e);
+                }
+            },
+
+            renderAlertQueue(alerts, silent = false) {
+                const list = document.getElementById('alert-queue-list');
+                
+                if (alerts.length === 0) {
+                    list.innerHTML = `
+                        <div style="text-align: center; color: var(--text-secondary); padding: 3rem 1rem; font-size: 0.8rem;">
+                            No ${State.currentFilter.toLowerCase()} alerts found in queue.
+                        </div>
+                    `;
+                    return;
+                }
+
+                // If silent and no length differences, avoid complete re-renders to prevent focus losses
+                if (silent && list.children.length === alerts.length) {
+                    return; 
+                }
+
+                list.innerHTML = '';
+                alerts.forEach(alert => {
+                    const card = document.createElement('div');
+                    card.className = `alert-card risk-${alert.risk_score.risk_level} status-${alert.status}`;
+                    if (State.selectedAlertId === alert.alert_id) {
+                        card.classList.add('selected');
+                    }
+                    
+                    const rulesTriggered = alert.risk_score.rules_triggered.length;
+                    
+                    // Simple timezone display formatting
+                    const timeDiff = UI.formatTimeDifference(alert.created_at);
+
+                    card.onclick = () => UI.selectAlert(alert.alert_id);
+                    card.innerHTML = `
+                        <div class="card-top">
+                            <span class="card-ref">${alert.ref_no}</span>
+                            <span class="badge badge-${alert.status === 'REVIEWED_CLEARED' ? 'cleared' : alert.risk_score.risk_level.toLowerCase()}">${alert.status === 'REVIEWED_CLEARED' ? 'CLEARED' : alert.risk_score.risk_level}</span>
+                        </div>
+                        <div class="card-sender">${alert.ref_no.startsWith('REF-') ? 'Synthetic Subject' : 'Subject Name'} (ID: ${alert.sender_id.slice(-6)})</div>
+                        <div class="card-amount-line">KD ${alert.risk_score.rules_triggered[0]?.base_weight ? 'Flagged Remittance' : 'Transferred Funds'}</div>
+                        <div class="card-bottom">
+                            <span class="card-time">⏱️ ${timeDiff}</span>
+                            <span class="card-rules">${rulesTriggered} rules</span>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            },
+
+            async selectAlert(alertId) {
+                State.selectedAlertId = alertId;
+                
+                // Set active card selection in UI immediately
+                const cards = document.querySelectorAll('.alert-card');
+                cards.forEach(card => card.classList.remove('selected'));
+                
+                UI.loadAlertQueue(true); // refresh borders quickly
+                
+                try {
+                    const alert = await API.get(`/alerts/${alertId}`);
+                    UI.renderAlertDetail(alert);
+                } catch (e) {
+                    console.error("Failed to load details", e);
+                }
+            },
+
+            async renderAlertDetail(alert) {
+                const detail = document.getElementById('alert-detail-view');
+                const footer = document.getElementById('alert-detail-footer');
+                
+                // Fetch full customer profile context in parallel
+                let sender = null;
+                try {
+                    sender = await API.get(`/customers/${alert.sender_id}`);
+                } catch(err) {
+                    console.warn("KYC record not seeded/returned for subject", alert.sender_id);
+                }
+
+                // Compile formatted date string
+                const timestampStr = new Date(alert.created_at).toLocaleString();
+                const progressColor = alert.risk_score.final_score >= 75 
+                    ? 'var(--color-high)' 
+                    : (alert.risk_score.final_score >= 50 ? 'var(--color-medium)' : 'var(--accent-green)');
+
+                const rulesTriggeredHtml = alert.risk_score.rules_triggered.map(rule => {
+                    const weightBadgeColor = rule.base_weight >= 90 ? 'badge-high' : (rule.base_weight >= 70 ? 'badge-medium' : 'badge-low');
+                    
+                    const factorsHtml = rule.contributing_factors.length > 0
+                        ? `<ul class="rule-factors">${rule.contributing_factors.map(f => `<li>Compounded by ${f}</li>`).join('')}</ul>`
+                        : '';
+                    
+                    const regulationText = rule.rule_id ? `
+                        <div class="rule-reg-reference">
+                            <strong>Reference:</strong> Regulation Directive for ${rule.rule_id.replace(/_/g, ' ')}
+                        </div>
+                    ` : '';
+
+                    return `
+                        <div class="rule-card">
+                            <div class="rule-card-top">
+                                <span class="rule-card-name">🚫 ${rule.rule_name}</span>
+                                <span class="badge ${weightBadgeColor}">${rule.base_weight} Pts</span>
+                            </div>
+                            <span class="rule-desc">${rule.description}</span>
+                            ${factorsHtml}
+                            ${regulationText}
+                        </div>
+                    `;
+                }).join('');
+
+                                const confidenceColor = alert.gemini_confidence >= 0.7 
+                    ? '#4ade80' 
+                    : (alert.gemini_confidence >= 0.5 ? 'var(--color-medium)' : 'var(--color-high)');
+
+                let recipientHtml = '';
+                const countryMap = {
+                    "IN": "India",
+                    "PH": "Philippines",
+                    "EG": "Egypt",
+                    "PK": "Pakistan",
+                    "BD": "Bangladesh",
+                    "NP": "Nepal",
+                    "LK": "Sri Lanka",
+                    "SY": "Syria",
+                    "JO": "Jordan",
+                    "KW": "Kuwait",
+                    "IR": "Iran",
+                    "US": "United States",
+                    "GB": "United Kingdom",
+                    "AE": "United Arab Emirates",
+                    "RO": "Romania",
+                    "PL": "Poland",
+                    "UA": "Ukraine",
+                    "CZ": "Czech Republic"
+                };
+
+                if (alert.transaction) {
+                    const txn = alert.transaction;
+                    const destCountry = countryMap[txn.recipient_country] || txn.recipient_country || 'Unknown';
+                    const recipientType = txn.recipient_is_company ? "Company" : "Individual";
+                    
+                    let formattedAmount = 'Data unavailable';
+                    if (typeof txn.amount === 'number' && typeof txn.amount_kd === 'number') {
+                        formattedAmount = `${txn.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${txn.currency || ''} = ${txn.amount_kd.toFixed(3)} KD`;
+                    } else if (txn.amount !== undefined && txn.amount_kd !== undefined) {
+                        const amtVal = parseFloat(txn.amount);
+                        const amtKdVal = parseFloat(txn.amount_kd);
+                        if (!isNaN(amtVal) && !isNaN(amtKdVal)) {
+                            formattedAmount = `${amtVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${txn.currency || ''} = ${amtKdVal.toFixed(3)} KD`;
+                        }
+                    }
+
+                    const showCompanyRow = txn.recipient_is_company && txn.recipient_company_name;
+                    const companyRowHtml = showCompanyRow ? `
+                        <div class="kyc-item">
+                            <span class="kyc-label">Company Name</span>
+                            <span class="kyc-val">${txn.recipient_company_name}</span>
+                        </div>
+                    ` : '';
+                    
+                    const purposeSpan = showCompanyRow ? '' : ' style="grid-column: span 2;"';
+
+                    recipientHtml = `
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <h4 class="section-title">📤 Recipient / Beneficiary Details</h4>
+                            <div class="kyc-grid">
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Beneficiary Name</span>
+                                    <span class="kyc-val">${txn.recipient_name || 'N/A'}</span>
+                                </div>
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Destination Country</span>
+                                    <span class="kyc-val">${destCountry}</span>
+                                </div>
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Recipient Type</span>
+                                    <span class="kyc-val">${recipientType}</span>
+                                </div>
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Amount</span>
+                                    <span class="kyc-val">${formattedAmount}</span>
+                                </div>
+                                <div class="kyc-item"${purposeSpan}>
+                                    <span class="kyc-label">Purpose of Transfer</span>
+                                    <span class="kyc-val">${txn.transaction_purpose || 'N/A'}</span>
+                                </div>
+                                ${companyRowHtml}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    recipientHtml = `
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <h4 class="section-title">📤 Recipient / Beneficiary Details</h4>
+                            <div class="kyc-grid">
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Beneficiary Name</span>
+                                    <span class="kyc-val">Data unavailable</span>
+                                </div>
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Destination Country</span>
+                                    <span class="kyc-val">Data unavailable</span>
+                                </div>
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Recipient Type</span>
+                                    <span class="kyc-val">Data unavailable</span>
+                                </div>
+                                <div class="kyc-item">
+                                    <span class="kyc-label">Amount</span>
+                                    <span class="kyc-val">Data unavailable</span>
+                                </div>
+                                <div class="kyc-item" style="grid-column: span 2;">
+                                    <span class="kyc-label">Purpose of Transfer</span>
+                                    <span class="kyc-val">Data unavailable</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                detail.innerHTML = `
+                    <div class="detail-header-block">
+                        <div class="detail-meta-left">
+                            <div class="detail-ref-row">
+                                <span class="detail-ref-no">${alert.ref_no}</span>
+                                <span class="badge ${alert.status === 'REVIEWED_CLEARED' ? 'badge-cleared' : 'badge-' + alert.risk_score.risk_level.toLowerCase()}">${alert.status}</span>
+                            </div>
+                            <div class="detail-date-branch">
+                                <span>📅 ${timestampStr}</span>
+                                <span>📍 Central Money Exchange</span>
+                            </div>
+                            <div class="detail-sender-name">${sender ? sender.full_name : 'Civil Subject Profile'}</div>
+                            <div class="detail-badge-group">
+                                <span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-secondary); font-size:0.65rem;">Civil ID: ${alert.sender_id}</span>
+                                <span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-secondary); font-size:0.65rem;">PEP Status: ${sender && sender.is_pep ? '⚠️ YES PEP' : 'NO PEP'}</span>
+                            </div>
+                            ${alert.arize_trace_id ? `
+                                <a class="detail-trace-link" href="http://localhost:6090/projects/1/traces/${alert.arize_trace_id}" target="_blank">
+                                    🔍 Inspect Arize Phoenix Trace (Trace ID: ${alert.arize_trace_id.slice(0, 8)}...)
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Risk Score Horizontal Progress -->
+                    <div class="risk-score-container">
+                        <div class="risk-bar-label-row">
+                            <span class="risk-title">Aggregated Risk score</span>
+                            <span class="risk-num-display" style="color: ${progressColor}">${alert.risk_score.final_score.toFixed(1)} / 100</span>
+                        </div>
+                        <div class="risk-progress-outer">
+                            <div class="risk-progress-inner" style="width: ${alert.risk_score.final_score}%; background: ${progressColor}"></div>
+                        </div>
+                        <div class="formula-row">
+                            Base Weights: ${alert.risk_score.base_score} × Velocity Multiplier: ${alert.risk_score.behavior_multiplier}x × Network Multiplier: ${alert.risk_score.network_multiplier}x = ${alert.risk_score.final_score.toFixed(1)}
+                        </div>
+                    </div>
+
+                    <!-- KYC customer profiles -->
+                    <div class="kyc-grid">
+                        <div class="kyc-item">
+                            <span class="kyc-label">Nationality</span>
+                            <span class="kyc-val">${sender ? sender.nationality + ' - Resident Expat' : 'International Expat'}</span>
+                        </div>
+                        <div class="kyc-item">
+                            <span class="kyc-label">Customer Type</span>
+                            <span class="kyc-val" style="text-transform: capitalize;">${sender ? sender.customer_type : 'Individual Remitter'}</span>
+                        </div>
+                        <div class="kyc-item">
+                            <span class="kyc-label">Residency Article</span>
+                            <span class="kyc-val">${sender && sender.residency_article ? 'Article ' + sender.residency_article : 'Kuwaiti Citizen / Tourist'}</span>
+                        </div>
+                        <div class="kyc-item" style="grid-column: span 2;">
+                            <span class="kyc-label">Declared Monthly Salary</span>
+                            <span class="kyc-val">${sender && sender.monthly_income_kd ? sender.monthly_income_kd.toLocaleString() + ' KD / Month' : 'Underdeclared'}</span>
+                        </div>
+                        <div class="kyc-item">
+                            <span class="kyc-label">Phone</span>
+                            <span class="kyc-val">${sender ? sender.phone : 'Unrecorded'}</span>
+                        </div>
+                    </div>
+
+                    <!-- Recipient Details Block -->
+                    ${recipientHtml}
+
+                    <!-- Triggered rules -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <h4 class="section-title">🔍 Triggered Compliance Regs (${alert.risk_score.rules_triggered.length})</h4>
+                        <div class="rules-triggered-list">
+                            ${rulesTriggeredHtml}
+                        </div>
+                    </div>
+
+                    <!-- Gemini Box -->
+                    <div class="gemini-reasoning-box">
+                        <div class="gemini-box-header">
+                            <div class="gemini-title-group">
+                                <span style="font-size: 1.25rem;">🤖</span> Gemini Reasoning Narrative
+                            </div>
+                            <span class="logo-badge" style="background: rgba(0, 122, 61, 0.1); border-color: var(--accent-green); color: #4ade80;">Google ADK Pipeline</span>
+                        </div>
+                        <div class="gemini-narrative">
+                            ${alert.gemini_reasoning}
+                        </div>
+                        <div class="gemini-meta-footer">
+                            <span class="gemini-confidence">
+                                Agent Confidence: 
+                                <strong style="color: ${confidenceColor}">${(alert.gemini_confidence * 100.0).toFixed(0)}%</strong>
+                            </span>
+                            <span class="gemini-rec-action">
+                                Recommended Action: 
+                                <span class="gemini-rec-badge ${alert.risk_score.risk_level === 'HIGH' ? 'file-str' : ''}">${alert.risk_score.risk_level === 'HIGH' ? 'FILE_STR' : 'HOLD'}</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+
+                // Render detail actions footer buttons
+                footer.classList.remove('hidden');
+                
+                // Show View STR only if str_generated is true
+                const viewStrBtn = alert.str_generated
+                    ? `<button class="btn btn-viewstr" onclick="UI.openSTRReportModal('${alert.alert_id}')">📂 View Filed STR Report</button>`
+                    : '';
+
+                if (alert.status === 'PENDING') {
+                    footer.innerHTML = `
+                        ${viewStrBtn}
+                        <div class="action-buttons-group">
+                            <button class="btn btn-clear" onclick="UI.openReviewModal('${alert.alert_id}', 'CLEAR')">Clear Alert</button>
+                            <button class="btn btn-monitor" onclick="UI.openReviewModal('${alert.alert_id}', 'MONITOR')">Monitor</button>
+                            <button class="btn btn-hold" onclick="UI.openReviewModal('${alert.alert_id}', 'HOLD')">Hold Txn</button>
+                            <button class="btn btn-filestr" onclick="UI.openReviewModal('${alert.alert_id}', 'FILE_STR')">File STR</button>
+                        </div>
+                    `;
+                } else {
+                    footer.innerHTML = `
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                            Reviewed by <strong>${alert.reviewed_by || 'Officer'}</strong> on ${new Date(alert.reviewed_at).toLocaleDateString()} — Notes: <em>"${alert.reviewer_notes || 'None'}"</em>
+                        </span>
+                        ${viewStrBtn}
+                    `;
+                }
+            },
+
+            openReviewModal(alertId, action) {
+                const modal = document.getElementById('review-action-modal');
+                const confirmBtn = document.getElementById('modal-review-confirm-btn');
+                const notesInput = document.getElementById('reviewer-notes-input');
+                const title = document.getElementById('modal-review-title');
+                
+                notesInput.value = '';
+                title.innerText = `Log Compliance Decision: ${action}`;
+                modal.classList.add('open');
+                
+                confirmBtn.onclick = async () => {
+                    const reviewer = document.getElementById('reviewer-name-input').value || 'Compliance Officer';
+                    const notes = notesInput.value || 'Reviewed and confirmed decision.';
+                    
+                    let status = 'REVIEWED_CLEARED';
+                    let generate_str = false;
+                    
+                    if (action === 'CLEAR') {
+                        status = 'REVIEWED_CLEARED';
+                    } else if (action === 'MONITOR' || action === 'HOLD') {
+                        status = 'REVIEWED_ESCALATED';
+                    } else if (action === 'FILE_STR') {
+                        status = 'STR_FILED';
+                        generate_str = true;
+                    }
+                    
+                    try {
+                        await API.patch(`/alerts/${alertId}/review`, {
+                            status,
+                            reviewer,
+                            notes,
+                            generate_str
+                        });
+                        UI.showToast(`Alert updated to status: ${status}`, 'success');
+                        modal.classList.remove('open');
+                        
+                        // Reload
+                        State.selectedAlertId = null;
+                        UI.loadStats();
+                        UI.loadAlertQueue();
+                        
+                        // Reset details
+                        document.getElementById('alert-detail-view').innerHTML = `
+                            <div class="detail-empty-state">
+                                <div class="empty-icon">👁️</div>
+                                <h3>EagleEyes AML Standby Console</h3>
+                                <p style="max-width: 450px; font-size: 0.85rem; line-height: 1.6;">
+                                    Alert resolved successfully. Select another flagged transaction from the queue to continue compliance screening.
+                                </p>
+                            </div>
+                        `;
+                        document.getElementById('alert-detail-footer').classList.add('hidden');
+                    } catch(err) {
+                        UI.showToast(`Failed to update alert: ${err.message}`, 'error');
+                    }
+                };
+            },
+
+            async updateAlertEdits(alertId) {
+                const statusSelect = document.getElementById('detail-user-status');
+                const commentTextarea = document.getElementById('detail-user-comment');
+                if (!statusSelect || !commentTextarea) return;
+
+                const user_status = statusSelect.value || null;
+                const comment = commentTextarea.value || null;
+
+                try {
+                    await API.patch(`/alerts/${alertId}`, {
+                        user_status,
+                        comment
+                    });
+                    UI.showToast('Audit trail auto-saved', 'success');
+                    
+                    // Keep state in sync
+                    if (State.alerts) {
+                        const alert = State.alerts.find(a => a.alert_id === alertId);
+                        if (alert) {
+                            alert.user_status = user_status;
+                            alert.comment = comment;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to save user edits", e);
+                    UI.showToast('Save failed: ' + e.message, 'error');
+                }
+            },
+
+            exportToExcel() {
+                let status = "PENDING";
+                let riskLevel = null;
+                
+                if (State.currentFilter === 'CLEARED') {
+                    status = "REVIEWED_CLEARED";
+                } else if (State.currentFilter !== 'ALL') {
+                    riskLevel = State.currentFilter;
+                }
+                
+                let query = `/alerts/export?status=${status}`;
+                if (riskLevel) {
+                    query += `&risk_level=${riskLevel}`;
+                }
+                
+                const downloadUrl = `${API.base}${query}`;
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                UI.showToast('Downloading flagged transactions spreadsheet...', 'success');
+            },
+
+            async openSTRReportModal(alertId) {
+                const modal = document.getElementById('str-report-modal');
+                const body = document.getElementById('str-report-body');
+                
+                body.innerText = "Loading suspicions grounds compiled narrative...";
+                modal.classList.add('open');
+                
+                try {
+                    const str = await API.get(`/alerts/${alertId}/str`);
+                    body.innerText = str.str_content;
+                } catch(e) {
+                    body.innerText = `Error loading STR narrative: ${e.message}. Please verify alert state.`;
+                }
+            },
+
+            closeModals() {
+                document.getElementById('review-action-modal').classList.remove('open');
+                document.getElementById('str-report-modal').classList.remove('open');
+            },
+
+            async loadLatestSelfImprovementReport() {
+                const body = document.getElementById('imp-gemini-narrative');
+                
+                try {
+                    const report = await API.get('/improvement/latest');
+                    State.latestReport = report;
+                    UI.renderImprovementPanel(report);
+                } catch (e) {
+                    body.innerHTML = `
+                        <div style="text-align: center; color: var(--text-secondary); padding: 3rem 1rem;">
+                            No self-improvement runs executed yet. Load demo dataset or seed synthetic dataset and trigger sequential batch run of 50+ transactions at the bottom to trigger meta-analysis loops.
+                        </div>
+                    `;
+                }
+            },
+
+            renderImprovementPanel(report) {
+                document.getElementById('imp-total-evaluated').innerText = report.transactions_evaluated.toLocaleString();
+                document.getElementById('imp-total-alerts').innerText = report.total_alerts_generated.toLocaleString();
+                document.getElementById('imp-false-positive').innerText = `${report.false_positive_estimate.toFixed(1)}%`;
+                
+                const appliedBadge = document.getElementById('improvement-applied-badge');
+                const applyBtn = document.getElementById('improvement-apply-btn');
+                
+                if (report.applied) {
+                    appliedBadge.innerText = "Applied & Deploy Active";
+                    appliedBadge.style.background = "rgba(0, 122, 61, 0.1)";
+                    appliedBadge.style.color = "#4ade80";
+                    appliedBadge.style.borderColor = "var(--accent-green)";
+                    applyBtn.disabled = true;
+                    applyBtn.innerText = "Optimization Applied";
+                } else {
+                    appliedBadge.innerText = "Pending Review";
+                    appliedBadge.style.background = "rgba(244, 162, 97, 0.1)";
+                    appliedBadge.style.color = "var(--color-medium)";
+                    appliedBadge.style.borderColor = "var(--color-medium)";
+                    applyBtn.disabled = false;
+                    applyBtn.innerText = "Approve & Deploy Weights";
+                }
+
+                // Gating Check
+                const gatingCard = document.getElementById('imp-gating-card');
+                // Assume LOW or error check
+                const isLowConfidence = report.gemini_analysis.toLowerCase().includes("warning") || report.false_positive_estimate > 90; 
+                
+                if (isLowConfidence) {
+                    gatingCard.classList.remove('hidden');
+                    document.getElementById('imp-confidence').innerText = "LOW CONFIDENCE";
+                    document.getElementById('imp-confidence').style.color = "var(--color-high)";
+                    applyBtn.disabled = true;
+                    applyBtn.innerText = "Gated: System Warning";
+                } else {
+                    gatingCard.classList.add('hidden');
+                    document.getElementById('imp-confidence').innerText = "STABLE HIGH";
+                    document.getElementById('imp-confidence').style.color = "#4ade80";
+                }
+
+                // Narrative
+                document.getElementById('imp-gemini-narrative').innerText = report.gemini_analysis;
+
+                // Keyword Delta
+                const additions = document.getElementById('imp-keyword-additions');
+                additions.innerHTML = report.keyword_additions.length > 0
+                    ? report.keyword_additions.map(kw => `<span class="keyword-pill addition">+ ${kw}</span>`).join('')
+                    : `<span style="font-size:0.75rem; color:var(--text-secondary)">No additions</span>`;
+
+                const removals = document.getElementById('imp-keyword-removals');
+                removals.innerHTML = report.keyword_removals.length > 0
+                    ? report.keyword_removals.map(kw => `<span class="keyword-pill removal">- ${kw}</span>`).join('')
+                    : `<span style="font-size:0.75rem; color:var(--text-secondary)">No removals</span>`;
+
+                // Weights Table Comparison
+                const tbody = document.getElementById('imp-weights-table-body');
+                tbody.innerHTML = '';
+                
+                const currentWeights = State.stats.current_rule_weights || {};
+                
+                Object.keys(report.rule_weight_adjustments).forEach(ruleId => {
+                    const proposed = report.rule_weight_adjustments[ruleId];
+                    const current = currentWeights[ruleId] !== undefined ? currentWeights[ruleId] : proposed;
+                    const delta = proposed - current;
+                    
+                    let deltaHtml = `<span class="change-none">0.0</span>`;
+                    if (delta > 0) {
+                        deltaHtml = `<span class="change-up">▲ +${delta.toFixed(1)}</span>`;
+                    } else if (delta < 0) {
+                        deltaHtml = `<span class="change-down">▼ ${delta.toFixed(1)}</span>`;
+                    }
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="rule-id">${ruleId}</td>
+                        <td>${current.toFixed(1)}</td>
+                        <td>${proposed.toFixed(1)}</td>
+                        <td class="weight-change-cell">${deltaHtml}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            },
+
+            openApplyImprovementModal() {
+                if (!State.latestReport) return;
+                
+                const check = confirm("This will permanently re-weight active compliance engine calculations live. Are you sure you want to deploy these updates to the active production weights collection?");
+                if (check) {
+                    UI.applyImprovementReport();
+                }
+            },
+
+            async applyImprovementReport() {
+                try {
+                    const res = await API.post(`/improvement/${State.latestReport.report_id}/apply`, {
+                        approved_by: "Senior Compliance Director",
+                        notes: "Approved live weights tuning recommended by Google ADK loop."
+                    });
+                    
+                    UI.showToast("MLOps dynamic heuristics weights applied successfully!", "success");
+                    
+                    // Reload both views
+                    UI.loadStats();
+                    UI.loadLatestSelfImprovementReport();
+                } catch(e) {
+                    UI.showToast(`Failed to deploy weights: ${e.message}`, 'error');
+                }
+            },
+
+            async triggerDemoSeed() {
+                const btn = document.getElementById('btn-demo-seed');
+                btn.disabled = true;
+                btn.innerText = "Seeding Database...";
+                
+                try {
+                    const res = await API.post('/demo/load-sample-data', {});
+                    UI.showToast(`Seeded ${res.customers_loaded} KYC and ${res.transactions_loaded} transactions!`, 'success');
+                    
+                    // Reload views
+                    UI.loadStats();
+                    if (State.activeTab === 'dashboard') {
+                        UI.loadAlertQueue();
+                    } else {
+                        UI.loadLatestSelfImprovementReport();
+                    }
+                } catch(err) {
+                    UI.showToast(`Seeding failed: ${err.message}`, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "🔄 Load Synthetic Dataset";
+                }
+            },
+
+            async triggerBatchDemo() {
+                if (State.batchRunning) return;
+                
+                const btn = document.getElementById('btn-demo-batch');
+                const consoleDiv = document.getElementById('progress-console');
+                const drawer = document.getElementById('batch-progress-drawer');
+                const stopBtn = document.getElementById('btn-stop-batch');
+                const titleText = document.getElementById('drawer-title-text');
+                
+                State.batchRunning = true;
+                btn.disabled = true;
+                btn.innerText = "Executing Batch...";
+                
+                // Reset title and show Stop button
+                titleText.innerText = "Sequential Compliance Stream Ingesting...";
+                stopBtn.style.display = 'inline-block';
+                stopBtn.disabled = false;
+                stopBtn.innerText = "🛑 Stop Evaluation";
+                
+                // Clear console log
+                consoleDiv.innerHTML = `<div class="console-line info">[SYS] Loading chronologically sorted synthetic batch...</div>`;
+                drawer.classList.add('open');
+
+                // Create abort controller for request cancellation
+                State.abortController = new AbortController();
+
+                // Start Fast Polling every 2s for metrics incremental increments
+                State.batchPollerId = setInterval(() => {
+                    UI.loadStats();
+                }, 2000);
+
+                try {
+                    const res = await fetch('/api/v1/demo/run-batch-evaluation', { 
+                        method: 'POST',
+                        signal: State.abortController.signal
+                    });
+                    if (!res.ok) {
+                        throw new Error(`Batch execution returned HTTP ${res.status}`);
+                    }
+                    
+                    const reader = res.body.getReader();
+                    const decoder = new TextDecoder('utf-8');
+                    let buffer = '';
+                    
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
+                        
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop(); // Keep remaining buffer
+
+                        for (const line of lines) {
+                            const trimmed = line.trim();
+                            if (trimmed.startsWith('data: ')) {
+                                const dataStr = trimmed.slice(6).trim();
+                                if (!dataStr) continue;
+                                
+                                try {
+                                    const data = JSON.parse(dataStr);
+                                    UI.handleStreamProgress(data);
+                                } catch(e) {
+                                    console.warn("Failed to parse chunk", e, dataStr);
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Only show complete toast if not stopped
+                    if (State.batchRunning) {
+                        UI.showToast("Batch evaluation completed and trace traces flushed!", "success");
+                    }
+                } catch(err) {
+                    if (err.name === 'AbortError') {
+                        UI.showToast("Batch evaluation stopped.", 'info');
+                    } else {
+                        UI.showToast(`Batch execution failed: ${err.message}`, 'error');
+                        const errLine = document.createElement('div');
+                        errLine.className = 'console-line error';
+                        errLine.innerText = `[CRIT ERROR] ${err.message}`;
+                        consoleDiv.appendChild(errLine);
+                    }
+                } finally {
+                    State.batchRunning = false;
+                    btn.disabled = false;
+                    btn.innerText = "⚡ Run Batch Evaluation";
+                    
+                    // Hide stop button
+                    stopBtn.style.display = 'none';
+                    State.abortController = null;
+                    
+                    // Stop fast polling and return to standard
+                    clearInterval(State.batchPollerId);
+                    UI.loadStats();
+                    
+                    // Refresh view queues
+                    if (State.activeTab === 'dashboard') {
+                        UI.loadAlertQueue();
+                    } else {
+                        UI.loadLatestSelfImprovementReport();
+                    }
+                    
+                    setTimeout(() => {
+                        if (!State.batchRunning) {
+                            drawer.classList.remove('open');
+                        }
+                    }, 5000);
+                }
+            },
+
+            async stopBatchEvaluation() {
+                if (!State.batchRunning) return;
+                
+                const stopBtn = document.getElementById('btn-stop-batch');
+                const titleText = document.getElementById('drawer-title-text');
+                
+                stopBtn.disabled = true;
+                stopBtn.innerText = "Stopping...";
+                titleText.innerText = "Batch Evaluation Stopping...";
+                
+                // Call backend stop endpoint to request cooperative cancellation
+                try {
+                    await fetch('/api/v1/demo/stop-batch-evaluation', { method: 'POST' });
+                } catch (e) {
+                    console.error("Failed to notify backend about cancellation:", e);
+                }
+            },
+
+            handleStreamProgress(data) {
+                const bar = document.getElementById('progress-bar');
+                const text = document.getElementById('progress-text');
+                const consoleDiv = document.getElementById('progress-console');
+                const titleText = document.getElementById('drawer-title-text');
+                
+                if (data.status === 'started') {
+                    text.innerText = `Ingesting: 0 / ${data.total_transactions} (0.00%)`;
+                    bar.style.width = '0%';
+                    
+                    const line = document.createElement('div');
+                    line.className = 'console-line success';
+                    line.innerText = `[START] ${data.message}`;
+                    consoleDiv.appendChild(line);
+                } else if (data.status === 'improving') {
+                    bar.style.width = '100%';
+                    
+                    const line = document.createElement('div');
+                    line.className = 'console-line warning';
+                    line.innerText = `[MLOPS] ${data.message}`;
+                    consoleDiv.appendChild(line);
+                } else if (data.status === 'completed') {
+                    bar.style.width = '100%';
+                    let completeText = `Ingestion complete! Seeded: ${data.summary.flagged} Alerts.`;
+                    if (data.summary.failed) {
+                        completeText += ` Failed: ${data.summary.failed}.`;
+                    }
+                    text.innerText = completeText;
+                    
+                    const line = document.createElement('div');
+                    line.className = 'console-line success';
+                    let completedMsg = `[COMPLETED] Batch loop finalized. Triggered flags: ${data.summary.flagged} | High Risk: ${data.summary.high_risk}`;
+                    if (data.summary.failed) {
+                        completedMsg += ` | Failed: ${data.summary.failed}`;
+                    }
+                    line.innerText = completedMsg;
+                    consoleDiv.appendChild(line);
+                } else if (data.status === 'cancelled') {
+                    titleText.innerText = "Batch Evaluation Stopped";
+                    text.innerText = `Evaluation Stopped! Evaluated: ${data.summary.evaluated} / ${data.summary.total_submitted}`;
+                    
+                    const line = document.createElement('div');
+                    line.className = 'console-line error';
+                    let stoppedMsg = `[STOPPED] Batch evaluation stopped by compliance officer. Evaluated: ${data.summary.evaluated} | Triggered flags: ${data.summary.flagged}`;
+                    if (data.summary.failed) {
+                        stoppedMsg += ` | Failed: ${data.summary.failed}`;
+                    }
+                    line.innerText = stoppedMsg;
+                    consoleDiv.appendChild(line);
+                } else if (data.status === 'failed') {
+                    bar.style.width = `${data.progress}%`;
+                    text.innerText = `Processed: ${data.evaluated_count} ( ${data.progress.toFixed(1)}% )`;
+                    
+                    const logLine = document.createElement('div');
+                    logLine.className = 'console-line error';
+                    logLine.innerText = `[ERROR] Failed evaluating ${data.ref_no}: ${data.error}`;
+                    consoleDiv.appendChild(logLine);
+                } else if (data.progress) {
+                    bar.style.width = `${data.progress}%`;
+                    text.innerText = `Processed: ${data.evaluated_count} ( ${data.progress.toFixed(1)}% )`;
+                    
+                    const logLine = document.createElement('div');
+                    logLine.className = 'console-line';
+                    
+                    if (data.alert_generated) {
+                        logLine.className = `console-line ${data.risk_level === 'HIGH' ? 'error' : 'warning'}`;
+                        logLine.innerText = `[FLAGGED] [${data.risk_level}] Txn ${data.ref_no} triggered rules. Risk: ${data.risk_score.toFixed(1)}`;
+                    } else {
+                        logLine.className = 'console-line info';
+                        logLine.innerText = `[CLEARED] Txn ${data.ref_no} cleared rules engine successfully.`;
+                    }
+                    consoleDiv.appendChild(logLine);
+                }
+                
+                // Auto scroll console to bottom
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            },
+
+            formatTimeDifference(utcString) {
+                const date = new Date(utcString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+                
+                if (seconds < 60) return `${seconds}s ago`;
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}m ago`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours}h ago`;
+                return date.toLocaleDateString();
+            }
+        };
+
+        async function loadDemoData() {
+            const btn = document.getElementById('btn-load-demo');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="demo-spinner"></span>Loading...';
+
+            try {
+                const data = await API.post('/demo/load-demo-data', {});
+                const b = data.loaded.breakdown;
+                showToast(
+                    `Demo data loaded: ${data.loaded.transactions} transactions — ` +
+                    `${b.high_risk} HIGH, ${b.medium_risk} MEDIUM, ${b.low_risk} LOW, ${b.clean} clean`,
+                    'success'
+                );
+                await refreshStats();
+            } catch (err) {
+                showToast(`Failed to load demo data: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Load Demo Data';
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            UI.showToast(message, type);
+        }
+
+        async function refreshStats() {
+            await UI.loadStats();
+            if (State.activeTab === 'dashboard') {
+                UI.loadAlertQueue();
+            } else {
+                UI.loadLatestSelfImprovementReport();
+            }
+        }
+
+        // Boot Init
+        window.onload = UI.init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"7de0941f91a040dea20dca8ea590c02c","collectionName":"rule_weights","type":"collection"}

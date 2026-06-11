@@ -1,0 +1,47 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: eagleeyes_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - eagleeyes_network
+    restart: unless-stopped
+ 
+  app:
+    build: .
+    container_name: eagleeyes_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION}
+      - GEMINI_MODEL=${GEMINI_MODEL}
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DB_NAME=eagleeyes
+      - PHOENIX_API_KEY=${PHOENIX_API_KEY}
+      # Phoenix Cloud space base URL (no /v1/traces here).
+      # Trace EXPORT appends /v1/traces in arize_client.register();
+      # the QUERY path (MCP, PhoenixClient, REST datasets) uses this base directly.
+      - PHOENIX_COLLECTOR_ENDPOINT=https://app.phoenix.arize.com/s/hussain-shamkhani
+      - PHOENIX_PROJECT_NAME=eagleeyes-aml
+      - ENVIRONMENT=development
+      - LOG_LEVEL=INFO
+      - SELF_IMPROVE_AFTER_N_TRANSACTIONS=${SELF_IMPROVE_AFTER_N_TRANSACTIONS}
+    depends_on:
+      - mongodb
+    networks:
+      - eagleeyes_network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+ 
+volumes:
+  mongodb_data:
+ 
+networks:
+  eagleeyes_network:
+    driver: bridge
