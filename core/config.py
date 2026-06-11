@@ -13,9 +13,11 @@ class Settings(BaseSettings):
     # Google Cloud / Gemini
     GOOGLE_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
-    GOOGLE_CLOUD_PROJECT: str
+    # Default so a missing env var can never crash startup (the Cloud Run
+    # build trigger does not reliably inject this). Override via env when needed.
+    GOOGLE_CLOUD_PROJECT: str = "eagle-eye-496806"
     GOOGLE_CLOUD_LOCATION: str = "us-central1"
-    GEMINI_MODEL: str = "gemini-2.0-flash"
+    GEMINI_MODEL: str = "gemini-3.5-flash"
 
     # MongoDB
     MONGODB_URI: str = "mongodb://localhost:27017"
@@ -49,4 +51,3 @@ if api_key:
     # builds a malformed host like "-aiplatform.googleapis.com" -> getaddrinfo
     # failed. Pinning this to false keeps it on generativelanguage.googleapis.com.
     os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "false"
-
