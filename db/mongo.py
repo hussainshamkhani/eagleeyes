@@ -50,14 +50,22 @@ class MongoClient:
         """Lazy database initializer if connect wasn't called explicitly."""
         if self._db is not None:
             return self._db
-        self.client = AsyncIOMotorClient(settings.MONGODB_URI)
+        self.client = AsyncIOMotorClient(
+            settings.MONGODB_URI,
+            serverSelectionTimeoutMS=5000,
+            connectTimeoutMS=5000,
+        )
         self._db = self.client[settings.MONGODB_DB_NAME]
         return self._db
 
     async def connect(self):
         """Initialize motor connection and create all indexes."""
         if self.client is None:
-            self.client = AsyncIOMotorClient(settings.MONGODB_URI)
+            self.client = AsyncIOMotorClient(
+                settings.MONGODB_URI,
+                serverSelectionTimeoutMS=5000,
+                connectTimeoutMS=5000,
+            )
             self._db = self.client[settings.MONGODB_DB_NAME]
         
         # Ping to check health
