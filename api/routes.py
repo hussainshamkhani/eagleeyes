@@ -1140,37 +1140,35 @@ async def demo_load_synthetic_dataset(db=Depends(get_db)):
 async def load_demo_data(db=Depends(get_db)):
     """
     Load a curated 100-transaction demo subset into MongoDB.
-    Picks representative transactions from the generated dataset:
+    Generates the dataset in-memory (fixed seed -> reproducible) and picks a
+    representative spread:
     - 50 clean transactions
     - 30 HIGH risk transactions
     - 15 MEDIUM risk transactions
     - 5 LOW risk transactions
+    No files on disk required, so this works in a stateless container.
     Only available in non-production environments.
     """
     if settings.ENVIRONMENT == "production":
         raise HTTPException(status_code=403, detail="Demo routes not available in production")
 
-    import json
-    import os
+    from data.generator import DataGenerator
+    import anyio
 
-    # Load generated data
-    generated_dir = "data/generated"
-    txn_path = os.path.join(generated_dir, "transactions.json")
-    gt_path = os.path.join(generated_dir, "ground_truth.json")
-    customers_path = os.path.join(generated_dir, "customers.json")
+    # Generate in-memory in a worker thread so the (CPU-bound, sync) generator
+    # does not block the event loop. Defaults (500/5000) give enough volume to
+    # populate the high/medium/low buckets below.
+    def execute_seeding_generator():
+        generator = DataGenerator(seed=42)
+        generator.generate_customers()
+        generator.generate_transactions(generator.customers)
+        return generator
 
-    if not os.path.exists(txn_path):
-        raise HTTPException(
-            status_code=404,
-            detail="Generated data not found. Run the data generator first: python -m data.generator"
-        )
+    generator = await anyio.to_thread.run_sync(execute_seeding_generator)
 
-    with open(txn_path) as f:
-        all_transactions = json.load(f)
-    with open(gt_path) as f:
-        ground_truth = json.load(f)
-    with open(customers_path) as f:
-        all_customers = json.load(f)
+    all_transactions = generator.transactions
+    all_customers = generator.customers
+    ground_truth = generator.ground_truth
 
     # Separate by fraud flag
     flagged = [t for t in all_transactions if ground_truth.get(t.get("ref_no"))]
@@ -1212,18 +1210,9 @@ async def load_demo_data(db=Depends(get_db)):
     demo_sender_ids = {t.get("sender_id") for t in demo_transactions}
     demo_customers = [c for c in all_customers if c.get("sender_id") in demo_sender_ids]
 
-    # Convert date strings back to datetimes for MongoDB queries
-    for c in demo_customers:
-        if isinstance(c.get("date_of_birth"), str):
-            c["date_of_birth"] = datetime.fromisoformat(c["date_of_birth"])
-        if isinstance(c.get("created_at"), str):
-            c["created_at"] = datetime.fromisoformat(c["created_at"])
-        if isinstance(c.get("updated_at"), str):
-            c["updated_at"] = datetime.fromisoformat(c["updated_at"])
-
-    for t in demo_transactions:
-        if isinstance(t.get("date"), str):
-            t["date"] = datetime.fromisoformat(t["date"])
+    # NOTE: in-memory records already hold native datetime objects (the generator
+    # builds them via Pydantic .model_dump()), so no ISO-string reconversion is
+    # needed here, unlike the old file-based path.
 
     # Clear existing data and load demo subset
     await db.transactions.delete_many({})
