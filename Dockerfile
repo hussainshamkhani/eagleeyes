@@ -22,5 +22,5 @@ COPY . .
 # Expose FastAPI port
 EXPOSE 8000
 
-# Run uvicorn server
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Shell form so ${PORT} expands at runtime. No --reload in production.
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}

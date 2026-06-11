@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EagleEyes — Autonomous Self-Improving AML Platform
 
 **EagleEyes** is an open-source, automated compliance reasoning and Anti-Money Laundering (AML) platform. It is designed to help money exchange companies (specifically matching Kuwait-based regulations) automatically screen transactions, write compliance justifications, and learn to improve itself over time.
@@ -141,3 +142,6 @@ python scratch/test_self_improvement.py
 
 ## 📄 License
 This project is licensed under the MIT License.
+=======
+# eagleeyes
+>>>>>>> f2e153ee63b35615e6703343272ed0fd55335d96
